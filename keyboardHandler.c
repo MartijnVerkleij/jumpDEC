@@ -24,7 +24,7 @@ void *keyboardHandler() {
 	pinMode(PIN_W, OUTPUT);
 	pinMode(PIN_P, OUTPUT);
 	
-	while(SDL_WaitEvent(&event) && quit != 1){
+	while(quit != 1 && SDL_WaitEvent(&event)){
 		//puts("event called");
 		switch( event.type ){
 		case SDL_KEYDOWN:
@@ -49,28 +49,29 @@ void handleKeys( SDL_KeyboardEvent *key ) {
 	if(*SDL_GetKeyName( key->keysym.sym) == 'a') {
 		if( key->type == SDL_KEYUP ){
 			digitalWrite(PIN_A,0);
-			sleep(1);
 			printf("A keyup %d\n",digitalRead(PIN_A));
 		}
 		else{
 			digitalWrite(PIN_A,1);
-                        printf("A keydown%d\n",digitalRead(PIN_A));
+                        printf("A keydown %d\n",digitalRead(PIN_A));
 		}
 	} else if(*SDL_GetKeyName( key->keysym.sym) == 'd') {
 		if( key->type == SDL_KEYUP ){
                         digitalWrite(PIN_D,0);
-                        printf("D keyup%d\n",digitalRead(PIN_D));
+                        printf("D keyup %d\n",digitalRead(PIN_D));
                 }
                 else{
                         digitalWrite(PIN_D,1);
-                        printf("D keydown%d\n",digitalRead(PIN_D));
+                        printf("D keydown %d\n",digitalRead(PIN_D));
                 }
 	} else if(*SDL_GetKeyName( key->keysym.sym) == 'w') {
 		if( key->type == SDL_KEYUP ){
                         digitalWrite(PIN_W,0);
+                        printf("W keyup %d\n",digitalRead(PIN_W));
                 }
                 else{
                         digitalWrite(PIN_W,1);
+                        printf("W keydown %d\n",digitalRead(PIN_W));
                 }
 	} else if (*SDL_GetKeyName( key->keysym.sym) == 'p') {
 		int pause = digitalRead(PIN_P);
@@ -79,6 +80,7 @@ void handleKeys( SDL_KeyboardEvent *key ) {
 			/* flip pause between 0 and 1 */
                         if (pause) { pause = 0; } else { pause = 1; }
 			digitalWrite(PIN_P,pause);
+			printf("Pause: %d\n",digitalRead(PIN_P));
 			
                 }
 	}
