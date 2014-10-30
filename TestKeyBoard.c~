@@ -24,8 +24,12 @@
         }
 
         /* Set a video mode */
+<<<<<<< HEAD
         screen = SDL_SetVideoMode( 600, 300, 0, SDL_HWPALETTE |                 SDL_DOUBLEBUF); 
         if( !screen){
+=======
+        if( !SDL_SetVideoMode( 1200, 1000, 0, 0 ) ){
+>>>>>>> 7b2d73279b6485d43999155e7d80f1eabe93d5e5
             fprintf( stderr, "Could not set video mode: %s\n", SDL_GetError() );
             SDL_Quit();
             exit( -1 );
