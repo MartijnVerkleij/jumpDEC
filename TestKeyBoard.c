@@ -17,7 +17,7 @@
         }
 
         /* Set a video mode */
-        if( !SDL_SetVideoMode( 320, 200, 0, 0 ) ){
+        if( !SDL_SetVideoMode( 1200, 1000, 0, 0 ) ){
             fprintf( stderr, "Could not set video mode: %s\n", SDL_GetError() );
             SDL_Quit();
             exit( -1 );
@@ -42,7 +42,8 @@
                     break;
 
                 default:
-                    break;
+                    sleep(1/60);
+		    puts("tick");
                 }
             }
 
