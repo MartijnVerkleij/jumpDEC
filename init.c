@@ -19,5 +19,9 @@ void *init(char *title) {
         SDL_EnableUNICODE( 1 );
 
 	SDL_WM_SetCaption(title, NULL);
-
+	
+	
+	system("for i in {0..15}; do gpio edge $i both; done");
+	wiringPiSetupSys();
+	puts("setup done\n");
 }
