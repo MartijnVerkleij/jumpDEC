@@ -83,7 +83,7 @@
     void drawImage(SDL_Surface *image, int x, int y){
         dest.x = x;
         dest.y = y;
-        dest.w = image->w;
+        dest.w = (image->w)*2;
         dest.h = image->h;
 
         SDL_BlitSurface(image, NULL, screen, &dest);
