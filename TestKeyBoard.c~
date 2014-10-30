@@ -24,8 +24,12 @@
         }
 
         /* Set a video mode */
+<<<<<<< HEAD
         screen = SDL_SetVideoMode( 600, 300, 0, SDL_HWPALETTE |                 SDL_DOUBLEBUF); 
         if( !screen){
+=======
+        if( !SDL_SetVideoMode( 1200, 1000, 0, 0 ) ){
+>>>>>>> 7b2d73279b6485d43999155e7d80f1eabe93d5e5
             fprintf( stderr, "Could not set video mode: %s\n", SDL_GetError() );
             SDL_Quit();
             exit( -1 );
@@ -38,28 +42,20 @@
         /* Enable Unicode translation */
         SDL_EnableUNICODE( 1 );
 
-        /* Loop until an SDL_QUIT event is found */
-        while( !quit ){
-
             /* Poll for events */
-            while( SDL_PollEvent( &event ) ){
-
-            switch( event.type ){
-                case SDL_KEYDOWN:
-                case SDL_KEYUP:
-                    PrintKeyInfo( &event.key );
-                    break;
-                case SDL_QUIT:
-                    quit = 1;
-                    break;
-
-                default:
-                    break;
-                }
+            while(SDL_WaitEvent(&event) && quit != 1){
+            	switch( event.type ){
+                	case SDL_KEYDOWN:
+                	case SDL_KEYUP:
+                    		PrintKeyInfo( &event.key );
+                    		break;
+                	case SDL_QUIT:
+                    		quit = 1;
+                    		break;
+                	default:
+		    		break;
+               		}
             }
-
-        }
-
         /* Clean up */
         SDL_Quit();
         exit( 0 );
@@ -77,13 +73,15 @@
         }else if(*SDL_GetKeyName( key->keysym.sym) == 'w'){
                 printf("JUMP");
                 printf( "\n" );
-        }
+        }else if (*SDL_GetKeyName( key->keysym.sym) == 'p'){
+		printf("PAUSE\n");
+	}
     }
 
     void drawImage(SDL_Surface *image, int x, int y){
         dest.x = x;
         dest.y = y;
-        dest.w = (image->w)*2;
+        dest.w = image->w;
         dest.h = image->h;
 
         SDL_BlitSurface(image, NULL, screen, &dest);

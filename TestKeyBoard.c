@@ -38,28 +38,20 @@
         /* Enable Unicode translation */
         SDL_EnableUNICODE( 1 );
 
-        /* Loop until an SDL_QUIT event is found */
-        while( !quit ){
-
             /* Poll for events */
-            while( SDL_PollEvent( &event ) ){
-
-            switch( event.type ){
-                case SDL_KEYDOWN:
-                case SDL_KEYUP:
-                    PrintKeyInfo( &event.key );
-                    break;
-                case SDL_QUIT:
-                    quit = 1;
-                    break;
-
-                default:
-                    break;
-                }
+            while(SDL_WaitEvent(&event) && quit != 1){
+            	switch( event.type ){
+                	case SDL_KEYDOWN:
+                	case SDL_KEYUP:
+                    		PrintKeyInfo( &event.key );
+                    		break;
+                	case SDL_QUIT:
+                    		quit = 1;
+                    		break;
+                	default:
+		    		break;
+               		}
             }
-
-        }
-
         /* Clean up */
         SDL_Quit();
         exit( 0 );
@@ -77,7 +69,9 @@
         }else if(*SDL_GetKeyName( key->keysym.sym) == 'w'){
                 printf("JUMP");
                 printf( "\n" );
-        }
+        }else if (*SDL_GetKeyName( key->keysym.sym) == 'p'){
+		printf("PAUSE\n");
+	}
     }
 
     void drawImage(SDL_Surface *image, int x, int y){
