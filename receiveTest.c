@@ -1,21 +1,23 @@
 #include <wiringPi.h>
 #include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 /* Input Pins */
-int DATA_1 // X1
-int DATA_2 // X2
-int DATA_3 // Y1
-int DATA_4 // Y2
-int DATA_5 // Block 1
-int DATA_6 // Block 2
-int DATA_7 // Block 3
-int DATA_8 // Block 4
-int DATA_9 // Block 5
-int FPGA_RDY
+int DATA_1 = 1; // X1
+int DATA_2 = 2; // X2
+int DATA_3 = 3; // Y1
+int DATA_4 = 4; // Y2
+int DATA_5 = 5; // Block 1
+int DATA_6 = 6; // Block 2
+int DATA_7 = 7; // Block 3
+int DATA_8 = 8; // Block 4
+int DATA_9 = 9; // Block 5
+int FPGA_RDY;
 
 /* Output Pins */
-int INIT_RDY
-int PI_RDY
+int INIT_RDY;
+int PI_RDY;
 
 /* booleans */
 int pi_init = 0;
@@ -34,7 +36,7 @@ char temp_y[10];
 struct coordinate {
 	int x;
 	int y;
-}
+};
 
 struct coordinate blocks[32];
 struct coordinate player;
@@ -56,7 +58,8 @@ int fromBinary(char *a, int n)
 {
     int dec=0;
     int j=0;
-    for(int i=(n-1);i>=0;i--) 
+    int i = (n-1);
+    for(i; i>=0; i--) 
     {
         dec=((int)(a[i] -48)*power(2,j))+dec;
         j++;
@@ -90,7 +93,7 @@ void init(){
 	player.x = 0;
 	player.y = 0;
 	int i = 0;
-	for(i, i < amount_block,i++){
+	for(i; i < amount_block; i++){
 		blocks[i].x = 0;
 		blocks[i].y = 0;
 	} 
@@ -100,11 +103,11 @@ void init(){
 /* Lees het aantal blokken en zet ze */
 void blocks_rec(){
 	/* Lees de data en plak ze in 1 array */
-	char one[] ={(char)(digitalRead(DATA_5) + '0')}
-	char two[] ={(char)(digitalRead(DATA_6) + '0')}
-	char three[] ={(char)(digitalRead(DATA_7) + '0')}
-	char four[] ={(char)(digitalRead(DATA_8) + '0')}
-	char five[] ={(char)(digitalRead(DATA_9) + '0')}
+	char one[] ={(char)(digitalRead(DATA_5) + '0')};
+	char two[] ={(char)(digitalRead(DATA_6) + '0')};
+	char three[] ={(char)(digitalRead(DATA_7) + '0')};
+	char four[] ={(char)(digitalRead(DATA_8) + '0')};
+	char five[] ={(char)(digitalRead(DATA_9) + '0')};
 	char all[5];
 	memcpy(all, one, 1);
 	memcpy(&all[1], two, 1);
@@ -117,9 +120,8 @@ void blocks_rec(){
 	amount_block = fromBinary(all, all_len);
 
 	/* Note that the amount of blocks is received */
-	amount_rec = 1
+	amount_rec = 1;
 }
-
 
 void co_rec(){
 	
@@ -130,9 +132,9 @@ void co_rec(){
 	************************/
 	/* Lees data uit en sla de coordinate bits op */
 	char x_temp[1] = {(char)(digitalRead(DATA_1) + '0')};
-	memcpy(&temp_x[co_count], temp, 1);
+	memcpy(&temp_x[co_count], x_temp, 1);
 	char y_temp[1] = {(char)(digitalRead(DATA_3) + '0')};
-	memcpy(&temp_y[co_count], temp, 1);
+	memcpy(&temp_y[co_count], y_temp, 1);
 	
 	/* Als Coordinaat compleet en het is een block*/
 	if(co_count == 10 && block_build < amount_block){
@@ -142,12 +144,17 @@ void co_rec(){
 		LEES UIT, LEEG BUFFER
 		SLA OP ALS X EN Y
 		*******************/
-		blocks[block_build].x = temp_x;
-		blocks[block_build].y = temp_y;
-		temp_x = NULL;
-		temp_y = NULL;
+   		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
+		blocks[block_build].x = fromBinary(temp_x,n);
+		blocks[block_build].y = fromBinary(temp_y,n);
+		memset(&temp_x[0], 0, sizeof(temp_x));
+		memset(&temp_y[0], 0, sizeof(temp_y));		
+		//temp_x = char[10];
+		//temp_y = char[10];
+		printf("x = %d, y = %d",blocks[block_build].x, 
+			blocks	[block_build].y);
 		co_count = 0;
-		block_build = block_build + /* AANTAL BLOKKEN */ ;
+		block_build = block_build + /* AANTAL BLOKKEN */ 1;
 	}
 	/* Als alle blokken gebouwd */
 	if(co_count == 10 && block_build >= amount_block){
@@ -159,11 +166,15 @@ void co_rec(){
 		*********************/
 		
 		/* set player coordinates */
-		player.x = temp_x;
-		player.y = temp_y;
-		temp_x = NULL;
-		temp_y = NULL;
-
+   		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
+		player.x = fromBinary(temp_x,n);
+		player.y = fromBinary(temp_y,n);
+		memset(&temp_x[0], 0, sizeof(temp_x));
+		memset(&temp_y[0], 0, sizeof(temp_y));		
+		//temp_x = char[10];
+		//temp_y = char[10];
+		printf("x = %d, y = %d",player.x, 
+			player.y);
 		co_count = 0;
 		/* Laat FPGA weten dat init rdy is */
 		pi_init = 1;
@@ -176,9 +187,29 @@ void co_rec(){
 
 void move_player(){
 
-	/**********
-	MOVE PLAYER
-	***********/
+	/* Lees data uit en sla de coordinate bits op */
+	char x_temp[1] = {(char)(digitalRead(DATA_1) + '0')};
+	memcpy(&temp_x[co_count], x_temp, 1);
+	char y_temp[1] = {(char)(digitalRead(DATA_3) + '0')};
+	memcpy(&temp_y[co_count], y_temp, 1);
+
+	if(co_count == 10){
+		
+		/*******************
+		Coordinaten zijn klaar
+		lees uit, leeg buffer	
+		en sla op als x en y
+		*********************/
+		
+		/* set player coordinates */
+   		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
+		player.x = fromBinary(temp_x,n);
+		player.y = fromBinary(temp_y,n);
+		memset(&temp_x[0], 0, sizeof(temp_x));
+		memset(&temp_y[0], 0, sizeof(temp_y));		
+
+		co_count = 0;
+	}
 }
 
 void main(){
@@ -197,5 +228,5 @@ void main(){
 		digitalWrite(PI_RDY, 0);	
 
 	}
-
+}
 
