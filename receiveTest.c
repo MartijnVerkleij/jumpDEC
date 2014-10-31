@@ -4,20 +4,20 @@
 #include <unistd.h>
 
 /* Input Pins */
-int DATA_1 = 1; // X1
-int DATA_2 = 2; // X2
-int DATA_3 = 3; // Y1
-int DATA_4 = 4; // Y2
-int DATA_5 = 5; // Block 1
-int DATA_6 = 6; // Block 2
-int DATA_7 = 7; // Block 3
-int DATA_8 = 8; // Block 4
-int DATA_9 = 9; // Block 5
-int FPGA_RDY;
+int DATA_1 = 0; // X1
+int DATA_2 = 1; // X2
+int DATA_3 = 2; // Y1
+int DATA_4 = 3; // Y2
+int DATA_5 = 4; // Block 1
+int DATA_6 = 5; // Block 2
+int DATA_7 = 6; // Block 3
+int DATA_8 = 7; // Block 4
+int DATA_9 = 10; // Block 5
+int FPGA_RDY = 11;
 
 /* Output Pins */
-int INIT_RDY;
-int PI_RDY;
+int INIT_RDY = 13;
+int PI_RDY = 14;
 
 /* booleans */
 int pi_init = 0;
@@ -135,7 +135,7 @@ void co_rec(){
 	memcpy(&temp_x[co_count], x_temp, 1);
 	char y_temp[1] = {(char)(digitalRead(DATA_3) + '0')};
 	memcpy(&temp_y[co_count], y_temp, 1);
-	
+	co_count++;
 	/* Als Coordinaat compleet en het is een block*/
 	if(co_count == 10 && block_build < amount_block){
 
@@ -147,12 +147,13 @@ void co_rec(){
    		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
 		blocks[block_build].x = fromBinary(temp_x,n);
 		blocks[block_build].y = fromBinary(temp_y,n);
+		puts("Block build");
+		printf("%d , %d\n",blocks[block_build].x,
+                        blocks  [block_build].y);
 		memset(&temp_x[0], 0, sizeof(temp_x));
 		memset(&temp_y[0], 0, sizeof(temp_y));		
 		//temp_x = char[10];
 		//temp_y = char[10];
-		printf("x = %d, y = %d",blocks[block_build].x, 
-			blocks	[block_build].y);
 		co_count = 0;
 		block_build = block_build + /* AANTAL BLOKKEN */ 1;
 	}
@@ -169,12 +170,12 @@ void co_rec(){
    		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
 		player.x = fromBinary(temp_x,n);
 		player.y = fromBinary(temp_y,n);
+		puts("Player build");
+		printf("%d, %d\n", player.x, player.y);
 		memset(&temp_x[0], 0, sizeof(temp_x));
 		memset(&temp_y[0], 0, sizeof(temp_y));		
 		//temp_x = char[10];
 		//temp_y = char[10];
-		printf("x = %d, y = %d",player.x, 
-			player.y);
 		co_count = 0;
 		/* Laat FPGA weten dat init rdy is */
 		pi_init = 1;
@@ -192,7 +193,7 @@ void move_player(){
 	memcpy(&temp_x[co_count], x_temp, 1);
 	char y_temp[1] = {(char)(digitalRead(DATA_3) + '0')};
 	memcpy(&temp_y[co_count], y_temp, 1);
-
+	co_count++;
 	if(co_count == 10){
 		
 		/*******************
@@ -205,6 +206,8 @@ void move_player(){
    		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
 		player.x = fromBinary(temp_x,n);
 		player.y = fromBinary(temp_y,n);
+		puts("MOVE PLAYER");
+		printf("%d, %d\n",player.x, player.y);
 		memset(&temp_x[0], 0, sizeof(temp_x));
 		memset(&temp_y[0], 0, sizeof(temp_y));		
 
@@ -212,21 +215,31 @@ void move_player(){
 	}
 }
 
-void main(){
-	if(FPGA_RDY){	
-		if(amount_rec == 0 && pi_init == 0){
-			blocks_rec();
-		} else if(pi_init == 0){
-			co_rec();
-		} else {
-			move_player();
-		}
-		
-		/* Send the Ack */
-		digitalWrite(PI_RDY, 1);
-		poll(0,0,1);
-		digitalWrite(PI_RDY, 0);	
+void do_something(){
+    //printf("In de if");
+    if(amount_rec == 0 && pi_init == 0){
+        puts("INIT");
+	blocks_rec();
+    } else if(pi_init == 0){
+	puts("BLOCKS");
+	co_rec();
+    } else {
+	puts("PLAYER");
+	move_player();
+    }
 
+    /* Send the Ack */
+    digitalWrite(PI_RDY, 1);
+    poll(0,0,1);
+    digitalWrite(PI_RDY, 0);
+
+}
+
+void main(){
+	init();
+	wiringPiISR(FPGA_RDY, INT_EDGE_RISING, &do_something);
+	while(1){
+		sched_yield();
 	}
 }
 
