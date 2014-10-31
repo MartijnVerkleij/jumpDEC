@@ -7,6 +7,6 @@ void *renderInit(Game game) {
 	int i = game.blockCount
 	for ( i ; i >= 0 ; i--) {
 		Coordinate block = game.blocks[i];
-		SDL_
+		SDL_Surface *temp = IMG_Load("test.png");
 	}
 }
