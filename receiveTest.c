@@ -93,7 +93,7 @@ void init(){
 	player.x = 0;
 	player.y = 0;
 	int i = 0;
-	for(i, i < amount_block,i++){
+	for(i; i < amount_block;i++){
 		blocks[i].x = 0;
 		blocks[i].y = 0;
 	} 
