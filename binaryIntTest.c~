@@ -29,7 +29,7 @@ int fromBinary(char *a, int n)
 
 int main(){
 	int input = 0;
-	char one[1] = {(char)(input + '0')};
+	char one[1] = {(char)(input + '1')};
 	char two[] ={'1'};
 	char three[] ={'0'};
 	char four[] ={'1'};

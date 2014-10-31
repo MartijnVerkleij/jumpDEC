@@ -19,5 +19,24 @@ void *init(char *title) {
         SDL_EnableUNICODE( 1 );
 
 	SDL_WM_SetCaption(title, NULL);
+	
 
+	int i;
+	for (i = 23; i >= 0; i--) {
+		char str[20];
+		switch(i) {
+		case 6:
+			break;
+		case 16:
+			break;
+		default:
+			snprintf(str, sizeof(str), "%s%d%s", 
+				"gpio export ", i, " out");
+			system(str);
+			puts(str);
+			break;
+		}
+	}
+	wiringPiSetupSys();
+	puts("setup done\n");
 }
