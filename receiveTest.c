@@ -1,5 +1,7 @@
 #include <wiringPi.h>
 #include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 /* Input Pins */
 int DATA_1 = 1; // X1
@@ -132,7 +134,7 @@ void co_rec(){
 	char x_temp[1] = {(char)(digitalRead(DATA_1) + '0')};
 	memcpy(&temp_x[co_count], x_temp, 1);
 	char y_temp[1] = {(char)(digitalRead(DATA_3) + '0')};
-	memcpy(&temp_y[co_it acount], y_temp, 1);
+	memcpy(&temp_y[co_count], y_temp, 1);
 	
 	/* Als Coordinaat compleet en het is een block*/
 	if(co_count == 10 && block_build < amount_block){
