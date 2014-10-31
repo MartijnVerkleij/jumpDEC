@@ -2,20 +2,20 @@
 #include <stdio.h>
 
 /* Input Pins */
-int DATA_1 // X1
-int DATA_2 // X2
-int DATA_3 // Y1
-int DATA_4 // Y2
-int DATA_5 // Block 1
-int DATA_6 // Block 2
-int DATA_7 // Block 3
-int DATA_8 // Block 4
-int DATA_9 // Block 5
-int FPGA_RDY
+int DATA_1 = 1; // X1
+int DATA_2 = 2; // X2
+int DATA_3 = 3; // Y1
+int DATA_4 = 4; // Y2
+int DATA_5 = 5; // Block 1
+int DATA_6 = 6; // Block 2
+int DATA_7 = 7; // Block 3
+int DATA_8 = 8; // Block 4
+int DATA_9 = 9; // Block 5
+int FPGA_RDY;
 
 /* Output Pins */
-int INIT_RDY
-int PI_RDY
+int INIT_RDY;
+int PI_RDY;
 
 /* booleans */
 int pi_init = 0;
@@ -34,7 +34,7 @@ char temp_y[10];
 struct coordinate {
 	int x;
 	int y;
-}
+};
 
 struct coordinate blocks[32];
 struct coordinate player;
@@ -56,7 +56,8 @@ int fromBinary(char *a, int n)
 {
     int dec=0;
     int j=0;
-    for(int i=(n-1);i>=0;i--) 
+    int i = (n-1);
+    for(i; i>=0; i--) 
     {
         dec=((int)(a[i] -48)*power(2,j))+dec;
         j++;
@@ -100,11 +101,11 @@ void init(){
 /* Lees het aantal blokken en zet ze */
 void blocks_rec(){
 	/* Lees de data en plak ze in 1 array */
-	char one[] ={(char)(digitalRead(DATA_5) + '0')}
-	char two[] ={(char)(digitalRead(DATA_6) + '0')}
-	char three[] ={(char)(digitalRead(DATA_7) + '0')}
-	char four[] ={(char)(digitalRead(DATA_8) + '0')}
-	char five[] ={(char)(digitalRead(DATA_9) + '0')}
+	char one[] ={(char)(digitalRead(DATA_5) + '0')};
+	char two[] ={(char)(digitalRead(DATA_6) + '0')};
+	char three[] ={(char)(digitalRead(DATA_7) + '0')};
+	char four[] ={(char)(digitalRead(DATA_8) + '0')};
+	char five[] ={(char)(digitalRead(DATA_9) + '0')};
 	char all[5];
 	memcpy(all, one, 1);
 	memcpy(&all[1], two, 1);
