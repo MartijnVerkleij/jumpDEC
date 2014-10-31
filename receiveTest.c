@@ -121,7 +121,6 @@ void blocks_rec(){
 	amount_rec = 1
 }
 
-
 void co_rec(){
 	
 	/***********************
@@ -130,9 +129,9 @@ void co_rec(){
 	COORDINATEN AAN
 	************************/
 	/* Lees data uit en sla de coordinate bits op */
-	char x_temp[1] = {(char)(digitalRead(DATA_1) + '0')};
+	char x_temp[1] = (char)(digitalRead(DATA_1) + '0');
 	memcpy(&temp_x[co_count], temp, 1);
-	char y_temp[1] = {(char)(digitalRead(DATA_3) + '0')};
+	char y_temp[1] = (char)(digitalRead(DATA_3) + '0');
 	memcpy(&temp_y[co_count], temp, 1);
 	
 	/* Als Coordinaat compleet en het is een block*/
@@ -145,10 +144,10 @@ void co_rec(){
 		*******************/
 		blocks[block_build].x = temp_x;
 		blocks[block_build].y = temp_y;
-		temp_x = NULL;
-		temp_y = NULL;
+		temp_x = char[10];
+		temp_y = char[10];
 		co_count = 0;
-		block_build = block_build + /* AANTAL BLOKKEN */ ;
+		block_build = block_build + /* AANTAL BLOKKEN */ 1;
 	}
 	/* Als alle blokken gebouwd */
 	if(co_count == 10 && block_build >= amount_block){
@@ -162,8 +161,8 @@ void co_rec(){
 		/* set player coordinates */
 		player.x = temp_x;
 		player.y = temp_y;
-		temp_x = NULL;
-		temp_y = NULL;
+		temp_x = char[10];
+		temp_y = char[10];
 
 		co_count = 0;
 		/* Laat FPGA weten dat init rdy is */
@@ -198,5 +197,5 @@ void main(){
 		digitalWrite(PI_RDY, 0);	
 
 	}
-
+}
 
