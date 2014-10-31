@@ -25,7 +25,7 @@ int main( int argc, char *argv[] ) {
 		// Start frame
 		Uint32 frame = SDL_GetTicks();
 		
-		render()
+		render();
 		
 		/* ================== */
 		/* FRAME FINALIZATION */
