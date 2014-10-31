@@ -1,5 +1,7 @@
 #include <SDL/SDL.h>
+#include "graphics.h"
 
+//SDL_Surface *screen
 
 void *init(char *title) {
 	/* Initialise SDL */
@@ -9,7 +11,8 @@ void *init(char *title) {
         }
 
         /* Set a video mode */
-        if( !SDL_SetVideoMode( 1200, 1000, 0, 0 ) ){
+	screen = SDL_SetVideoMode( 1200, 1000, 0, 0 );
+        if( !screen){
             fprintf( stderr, "Could not set video mode: %s\n", SDL_GetError() );
             SDL_Quit();
             exit( -1 );

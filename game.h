@@ -5,8 +5,8 @@ struct coordinate {
 
 
 /* Game Variable */
-typedef struct {
+struct game{
 	int blockCount;
-	Coordinate[32] blocks;
-	Coordinate player;
+	struct coordinate blocks[32];
+	struct coordinate player;
 } Game;
