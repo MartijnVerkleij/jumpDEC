@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include "game.h"
 
 /* Input Pins */
 int DATA_1 = 0; // X1
@@ -31,15 +32,7 @@ int co_count = 0;
 char temp_x[10];
 char temp_y[10];
 
-struct coordinate {
-	int x;
-	int y;
-};
-
-struct coordinate blocks[32];
-struct coordinate player; 
-
-
+Game game; 
 
 /* Used to calculate the decimal */
 int power(int c, int d)
@@ -70,7 +63,7 @@ int fromBinary(char *a, int n)
 
 /* Initialize the pins and empty the system */
 void init(){
-	blockCount = 0;
+	game.blockCount = 0;
 
 	wiringPiSetup();
 	/* Initialize Input pins */
@@ -92,12 +85,12 @@ void init(){
 	digitalWrite(PI_RDY, 0);
 
 	/* Empty the coordinate arrays */
-	player.x = 0;
-	player.y = 0;
+	game.player.x = 0;
+	game.player.y = 0;
 	int i = 0;
 	for(i; i < blockCount; i++){
-		blocks[i].x = 0;
-		blocks[i].y = 0;
+		game.blocks[i].x = 0;
+		game.blocks[i].y = 0;
 	} 
 	
 }
@@ -135,13 +128,9 @@ void co_rec(){
 	/* Lees data uit en sla de coordinate bits op */
 	char x_temp[1] = {(char)(digitalRead(DATA_1) + '0')};
 	memcpy(&temp_x[co_count], x_temp, 1);
-	char x_temp2[1] = {(char)(digitalRead(DATA_2) + '0')};
-	memcpy(&temp_x[co_count], x_temp2, 1);
 	char y_temp[1] = {(char)(digitalRead(DATA_3) + '0')};
 	memcpy(&temp_y[co_count], y_temp, 1);
-	char y_temp2[1] = {(char)(digitalRead(DATA_4) + '0')};
-	memcpy(&temp_y[co_count], y_temp2, 1);
-	co_count += 2;
+	co_count++;
 	/* Als Coordinaat compleet en het is een block*/
 	if(co_count == 10 && block_build < blockCount){
 
@@ -151,11 +140,11 @@ void co_rec(){
 		SLA OP ALS X EN Y
 		*******************/
    		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
-		blocks[block_build].x = fromBinary(temp_x,n);
-		blocks[block_build].y = fromBinary(temp_y,n);
+		game.blocks[block_build].x = fromBinary(temp_x,n);
+		game.blocks[block_build].y = fromBinary(temp_y,n);
 		puts("Block build");
-		printf("%d , %d\n",blocks[block_build].x,
-                        blocks  [block_build].y);
+		printf("%d , %d\n",game.blocks[block_build].x,
+                        game.blocks  [block_build].y);
 		memset(&temp_x[0], 0, sizeof(temp_x));
 		memset(&temp_y[0], 0, sizeof(temp_y));		
 		//temp_x = char[10];
@@ -174,10 +163,10 @@ void co_rec(){
 		
 		/* set player coordinates */
    		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
-		player.x = fromBinary(temp_x,n);
-		player.y = fromBinary(temp_y,n);
+		game.player.x = fromBinary(temp_x,n);
+		game.player.y = fromBinary(temp_y,n);
 		puts("player build");
-		printf("%d, %d\n", player.x, player.y);
+		printf("%d, %d\n", game.player.x, game.player.y);
 		memset(&temp_x[0], 0, sizeof(temp_x));
 		memset(&temp_y[0], 0, sizeof(temp_y));		
 		//temp_x = char[10];
@@ -197,13 +186,9 @@ void move_player(){
 	/* Lees data uit en sla de coordinate bits op */
 	char x_temp[1] = {(char)(digitalRead(DATA_1) + '0')};
 	memcpy(&temp_x[co_count], x_temp, 1);
-	char x_temp2[1] = {(char)(digitalRead(DATA_2) + '0')};
-	memcpy(&temp_x[co_count], x_temp2, 1);
 	char y_temp[1] = {(char)(digitalRead(DATA_3) + '0')};
 	memcpy(&temp_y[co_count], y_temp, 1);
-	char y_temp2[1] = {(char)(digitalRead(DATA_4) + '0')};
-	memcpy(&temp_y[co_count], y_temp2, 1);
-	co_count += 2;
+	co_count++;
 	if(co_count == 10){
 		
 		/*******************
@@ -214,10 +199,10 @@ void move_player(){
 		
 		/* set player coordinates */
    		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
-		player.x = fromBinary(temp_x,n);
-		player.y = fromBinary(temp_y,n);
+		game.player.x = fromBinary(temp_x,n);
+		game.player.y = fromBinary(temp_y,n);
 		puts("MOVE player");
-		printf("%d, %d\n",player.x, player.y);
+		printf("%d, %d\n",game.player.x, game.player.y);
 		memset(&temp_x[0], 0, sizeof(temp_x));
 		memset(&temp_y[0], 0, sizeof(temp_y));		
 
@@ -229,7 +214,7 @@ void do_something(){
     //printf("In de if");
     if(amount_rec == 0 && pi_init == 0){
         puts("INIT");
-	blocks_rec();
+	game.blocks_rec();
     } else if(pi_init == 0){
 	puts("BLOCKS");
 	co_rec();
@@ -243,6 +228,15 @@ void do_something(){
     poll(0,0,1);
     digitalWrite(PI_RDY, 0);
 
+}
+
+void inputHandler(Game in_game){
+	game = in_game;
+	init();
+	wiringPiISR(FPGA_RDY, INT_EDGE_RISING, &do_something);
+	while(1){
+		sched_yield();
+	}
 }
 
 void main(){
