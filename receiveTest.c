@@ -142,8 +142,9 @@ void co_rec(){
 		LEES UIT, LEEG BUFFER
 		SLA OP ALS X EN Y
 		*******************/
-		blocks[block_build].x = fromBinary(temp_x);
-		blocks[block_build].y = fromBinary(temp_y);
+   		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
+		blocks[block_build].x = fromBinary(temp_x,n);
+		blocks[block_build].y = fromBinary(temp_y,n);
 		memset(&temp_x[0], 0, sizeof(temp_x));
 		memset(&temp_y[0], 0, sizeof(temp_y));		
 		//temp_x = char[10];
@@ -161,8 +162,9 @@ void co_rec(){
 		*********************/
 		
 		/* set player coordinates */
-		player.x = fromBinary(temp_x);
-		player.y = fromBinary(temp_y);
+   		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
+		player.x = fromBinary(temp_x,n);
+		player.y = fromBinary(temp_y,n);
 		memset(&temp_x[0], 0, sizeof(temp_x));
 		memset(&temp_y[0], 0, sizeof(temp_y));		
 		//temp_x = char[10];
