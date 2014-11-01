@@ -32,7 +32,7 @@
         }
 	    SDL_WM_SetCaption("KeyboardTest", NULL);
 	
-        SDL_Surface *plaatje = LoadImg("../../../Downloads/man.png");
+        SDL_Surface *plaatje = LoadImg("test.png");
         drawImage(plaatje, 50, 50);
         
         /* Enable Unicode translation */

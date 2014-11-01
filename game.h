@@ -5,8 +5,10 @@ struct coordinate {
 
 
 /* Game Variable */
-struct game{
+struct game {
 	int blockCount;
 	struct coordinate blocks[32];
 	struct coordinate player;
 } Game;
+
+int *getBlockCount(struct game *game);

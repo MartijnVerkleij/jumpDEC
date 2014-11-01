@@ -3,19 +3,23 @@
 #include "game.h"
 #include "graphics.h"
 
+SDL_Surface *IMG_Load(char[]);
 
 void drawImage(SDL_Surface *image, int x, int y);
 
 SDL_Surface *LoadImg(char *name);
 
+struct game agame;
 
-void *renderInit(struct game game) {
-	int i = game.blockCount;
-	SDL_Surface blockImg = LoadImg("test.png");
+void *renderInit(struct game *game){
+	//agame = &ingame;
+	printf("%p",game);
+	int i = game->blockCount;
+	SDL_Surface *blockImg = LoadImg("test.png");
 	for ( i ; i >= 0 ; i--) {
-		struct coordinate block = game.blocks[i];
-		
-		drawImage(&blockImg, block.x, block.y); 
+		int blockx = game->blocks[i].x;
+		int blocky = game->blocks[i].y;
+		drawImage(blockImg, blockx, blocky); 
 	}
 }
 
@@ -35,6 +39,7 @@ SDL_Surface IMG_LOAD(char *name);
 
 SDL_Surface *LoadImg(char *name) {
 	SDL_Surface *temp = IMG_Load(name);
+	SDL_Surface *image;
 	if(temp == NULL) {
             printf("Failed to load image %s\n", name);
         return NULL;

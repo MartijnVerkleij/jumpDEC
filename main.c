@@ -4,28 +4,30 @@
 #include "keyboardHandler.c"
 #include "inputHandler.c"
 #include "graphics.c"
+//#include "game.h"
 
 extern void *init(char *);
 extern void *keyboardHandler();
 extern void *inputHandler();
-extern void *renderInit();
+extern void *renderInit(struct game *);
 
 
 pthread_t keyboardThread;
 pthread_t inputThread;
 
+struct game game;
+
 int main( int argc, char *argv[] ) {
 	
 	init("The Endgame");
 	int targ = 0;
-//	Game game;
-	pthread_create(&keyboardThread, NULL, &keyboardHandler, &targ);
-	pthread_create(&inputThread, NULL, &inputHandler, &targ);
+	pthread_create(&keyboardThread, NULL, &keyboardHandler, &game);
+	pthread_create(&inputThread, NULL, &inputHandler, &game);
 	while(1){
 		// Start frame
 		Uint32 frame = SDL_GetTicks();
 		
-		render();
+		renderInit(&game);
 		
 		/* ================== */
 		/* FRAME FINALIZATION */
