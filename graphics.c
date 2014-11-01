@@ -9,18 +9,26 @@ void drawImage(SDL_Surface *image, int x, int y);
 
 SDL_Surface *LoadImg(char *name);
 
-struct game agame;
+SDL_Surface *playerImg;
+
+//struct game agame;
 
 void *renderInit(struct game *game){
-	//agame = &ingame;
-	printf("%p",game);
+	//game = &ingame;
+	//printf("%p",game);
 	int i = game->blockCount;
+	printf("Blockcount: %d",i);
 	SDL_Surface *blockImg = LoadImg("test.png");
-	for ( i ; i >= 0 ; i--) {
-		int blockx = game->blocks[i].x;
-		int blocky = game->blocks[i].y;
-		drawImage(blockImg, blockx, blocky); 
+	for ( i ; i > 0 ; i--) {
+		int block_x = game->blocks[i].x;
+		int block_y = game->blocks[i].y;
+		drawImage(blockImg, block_x, block_y); 
 	}
+	playerImg = LoadImg("man.png");
+	int player_x = game->player.x;
+        int player_y = game->player.y;
+	drawImage(playerImg, player_x, player_y);
+	
 }
 
 SDL_Rect dest;
