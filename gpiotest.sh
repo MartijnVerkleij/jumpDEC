@@ -1,5 +1,11 @@
-gpio write 11 1
-gpio write 11 0
+
+while true
+do
+clear
+gpio readall
+sleep 0.1
+done
+
 
 echo "klaar"
 
