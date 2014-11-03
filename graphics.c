@@ -1,7 +1,6 @@
 #include <SDL/SDL.h>
 #include <stdio.h>
 #include "game.h"
-//#include "graphics.h"
 
 SDL_Surface *IMG_Load(char[]);
 
@@ -15,18 +14,21 @@ SDL_Surface IMG_LOAD(char *name);
 
 
 //Constant objects
-SDL_Rect room_floor;
+SDL_Surface *room_floor;
 SDL_Surface *blockImg;
 
 int SCREEN_HEIGHT;
 int SCREEN_WIDTH;
 
 void *renderInit(struct game *game) {
-	room_floor.x = 0;
-	room_floor.y = SCREEN_HEIGHT - 20;
-	room_floor.w = SCREEN_WIDTH;
-	room_floor.h = 20;
+	
+	/* Create floor 
+	room_floor = SDL_CreateRGBSurface(0, SCREEN_WIDTH, 20, 32, 0, 0, 0, 0);
+	SDL_FillRect(room_floor, NULL, SDL_MapRGB(room_floor->format, 255, 255, 255));
+	*/
 
+	/* Load sprites */
+	room_floorimg = LoadImg("floor.png");
 	playerImg = LoadImg("man.png");
 	blockImg = LoadImg("test.png");
 }
@@ -45,7 +47,8 @@ void *render(struct game *game){
 	int player_x = game->player.x;
         int player_y = game->player.y;
 	drawImage(playerImg, player_x, player_y);
-	SDL_FillRect(screen, &room_floor, SDL_MapRGB(screen->format, 255, 255, 255));
+	
+	drawImage(room_floorimg, 0, WINDOW_HEIGHT - 20); 
 	SDL_Flip(screen);
 }
 
