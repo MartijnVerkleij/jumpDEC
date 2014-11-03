@@ -9,7 +9,6 @@
 extern void *init(char *);
 extern void *keyboardHandler();
 extern void *inputHandler();
-extern void *renderInit(struct game *);
 extern void *render(struct game *);
 
 pthread_t keyboardThread;
@@ -36,8 +35,9 @@ int main( int argc, char *argv[] ) {
 		// Start frame
 		Uint32 frame = SDL_GetTicks();
 		
-		renderInit(&game);
+		render(&game);
 
+		
 		game.player.x += 10;
 		game.player.y += 10;
 				

@@ -13,7 +13,7 @@ SDL_Surface *playerImg;
 
 //struct game agame;
 
-void *renderInit(struct game *game){
+void *render(struct game *game){
 	//game = &ingame;
 	//printf("%p",game);
 	int i = game->blockCount;
