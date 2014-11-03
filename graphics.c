@@ -45,7 +45,7 @@ void *render(struct game *game){
 	int player_x = game->player.x;
         int player_y = game->player.y;
 	drawImage(playerImg, player_x, player_y);
-//	SDL_FillRect(screen, &room_floor, SDL_MapRGB(screen->format, 255, 0, 0));
+	SDL_FillRect(screen, &room_floor, SDL_MapRGB(screen->format, 255, 255, 255));
 	SDL_Flip(screen);
 }
 
