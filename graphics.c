@@ -36,6 +36,7 @@ void *renderInit(struct game *game) {
 
 	while(levelLoaded != 1) {
 		drawImage(loadingImg, 512 - 100 , 256 - 50);
+		SDL_Flip(screen);
 		SDL_Delay(100);
 	}
 }
