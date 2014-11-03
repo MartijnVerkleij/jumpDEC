@@ -11,6 +11,8 @@ SDL_Surface *LoadImg(char *name);
 
 SDL_Surface *playerImg;
 
+SDL_Surface IMG_LOAD(char *name);
+
 
 //Constant objects
 SDL_Rect room_floor;
@@ -43,6 +45,7 @@ void *render(struct game *game){
 	int player_x = game->player.x;
         int player_y = game->player.y;
 	drawImage(playerImg, player_x, player_y);
+//	SDL_FillRect(screen, &room_floor, SDL_MapRGB(screen->format, 255, 0, 0));
 	SDL_Flip(screen);
 }
 
@@ -58,7 +61,6 @@ void drawImage(SDL_Surface *image, int x, int y){
 
 
 
-SDL_Surface IMG_LOAD(char *name);
 
 SDL_Surface *LoadImg(char *name) {
 	SDL_Surface *temp = IMG_Load(name);
