@@ -4,24 +4,27 @@
 #include <unistd.h>
 
 /* Input Pins */
-int DATA_1 = 0; // X1
-int DATA_2 = 1; // X2
-int DATA_3 = 2; // Y1
-int DATA_4 = 3; // Y2
-int DATA_5 = 4; // Block 1
-int DATA_6 = 5; // Block 2
-int DATA_7 = 6; // Block 3
-int DATA_8 = 7; // Block 4
-int DATA_9 = 10; // Block 5
-int FPGA_RDY = 11;
+int DATA_1 = 10; // X1
+int DATA_2 = 11; // X2
+int DATA_3 = 12; // Y1
+int DATA_4 = 14; // Y2
+int DATA_5 = 2; // Block 1 && x1
+int DATA_6 = 3; // Block 2 && x2
+int DATA_7 = 4; // Block 3 && y1
+int DATA_8 = 5; // Block 4 && y2
+int DATA_9 = 6; // Block 5
+int FPGA_RDY = 1;
 
 /* Output Pins */
-int INIT_RDY = 13;
-int PI_RDY = 14;
+int INIT_RDY = 7;
+int PI_RDY = 0;
 
 /* booleans */
 int pi_init = 0;
 int amount_rec = 0;
+int initSend = 0;
+
+int blockCount = 0;
 
 /* Counters */
 int block_build = 0;
@@ -105,11 +108,11 @@ void init(){
 /* Lees het aantal blokken en zet ze */
 void blocks_rec(){
 	/* Lees de data en plak ze in 1 array */
-	char one[] ={(char)(digitalRead(DATA_5) + '0')};
-	char two[] ={(char)(digitalRead(DATA_6) + '0')};
+	char one[] ={(char)(digitalRead(DATA_9) + '0')};
+	char two[] ={(char)(digitalRead(DATA_8) + '0')};
 	char three[] ={(char)(digitalRead(DATA_7) + '0')};
-	char four[] ={(char)(digitalRead(DATA_8) + '0')};
-	char five[] ={(char)(digitalRead(DATA_9) + '0')};
+	char four[] ={(char)(digitalRead(DATA_6) + '0')};
+	char five[] ={(char)(digitalRead(DATA_5) + '0')};
 	char all[5];
 	memcpy(all, one, 1);
 	memcpy(&all[1], two, 1);
@@ -133,14 +136,14 @@ void co_rec(){
 	COORDINATEN AAN
 	************************/
 	/* Lees data uit en sla de coordinate bits op */
-	char x_temp[1] = {(char)(digitalRead(DATA_1) + '0')};
+	char x_temp[1] = {(char)(digitalRead(DATA_5) + '0')};
 	memcpy(&temp_x[co_count], x_temp, 1);
-	char x_temp2[1] = {(char)(digitalRead(DATA_2) + '0')};
-	memcpy(&temp_x[co_count], x_temp2, 1);
-	char y_temp[1] = {(char)(digitalRead(DATA_3) + '0')};
+	char x_temp2[1] = {(char)(digitalRead(DATA_6) + '0')};
+	memcpy(&temp_x[co_count + 1], x_temp2, 1);
+	char y_temp[1] = {(char)(digitalRead(DATA_7) + '0')};
 	memcpy(&temp_y[co_count], y_temp, 1);
-	char y_temp2[1] = {(char)(digitalRead(DATA_4) + '0')};
-	memcpy(&temp_y[co_count], y_temp2, 1);
+	char y_temp2[1] = {(char)(digitalRead(DATA_8) + '0')};
+	memcpy(&temp_y[co_count + 1], y_temp2, 1);
 	co_count += 2;
 	/* Als Coordinaat compleet en het is een block*/
 	if(co_count == 10 && block_build < blockCount){
@@ -162,30 +165,11 @@ void co_rec(){
 		//temp_y = char[10];
 		co_count = 0;
 		block_build = block_build + /* AANTAL BLOKKEN */ 1;
-	}
-	/* Als alle blokken gebouwd */
-	if(co_count == 10 && block_build >= blockCount){
-		
-		/*******************
-		Coordinaten zijn klaar
-		lees uit, leeg buffer	
-		en sla op als x en y
-		*********************/
-		
-		/* set player coordinates */
-   		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
-		player.x = fromBinary(temp_x,n);
-		player.y = fromBinary(temp_y,n);
-		puts("player build");
-		printf("%d, %d\n", player.x, player.y);
-		memset(&temp_x[0], 0, sizeof(temp_x));
-		memset(&temp_y[0], 0, sizeof(temp_y));		
-		//temp_x = char[10];
-		//temp_y = char[10];
-		co_count = 0;
-		/* Laat FPGA weten dat init rdy is */
+	} 
+	if(initSend != 1 && block_build >= blockCount){
+                digitalWrite(INIT_RDY, 1);
+		initSend ==1;
 		pi_init = 1;
-		digitalWrite(INIT_RDY, 1);
 	}
 	
 
@@ -198,11 +182,11 @@ void move_player(){
 	char x_temp[1] = {(char)(digitalRead(DATA_1) + '0')};
 	memcpy(&temp_x[co_count], x_temp, 1);
 	char x_temp2[1] = {(char)(digitalRead(DATA_2) + '0')};
-	memcpy(&temp_x[co_count], x_temp2, 1);
+	memcpy(&temp_x[co_count + 1], x_temp2, 1);
 	char y_temp[1] = {(char)(digitalRead(DATA_3) + '0')};
 	memcpy(&temp_y[co_count], y_temp, 1);
 	char y_temp2[1] = {(char)(digitalRead(DATA_4) + '0')};
-	memcpy(&temp_y[co_count], y_temp2, 1);
+	memcpy(&temp_y[co_count + 1], y_temp2, 1);
 	co_count += 2;
 	if(co_count == 10){
 		
@@ -226,7 +210,7 @@ void move_player(){
 }
 
 void do_something(){
-    //printf("In de if");
+    printf("In de if");
     if(amount_rec == 0 && pi_init == 0){
         puts("INIT");
 	blocks_rec();
