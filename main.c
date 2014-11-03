@@ -10,6 +10,8 @@ extern void *init(char *);
 extern void *keyboardHandler();
 extern void *inputHandler();
 extern void *render(struct game *);
+extern void *renderInit(struct game *);
+
 
 pthread_t keyboardThread;
 pthread_t inputThread;
@@ -30,7 +32,9 @@ int main( int argc, char *argv[] ) {
         game.blocks[2].y = 150;
 	game.player.x = 200;
 	game.player.y = 200;
-
+	
+	renderInit(&game);
+	
 	while(1){
 		// Start frame
 		Uint32 frame = SDL_GetTicks();

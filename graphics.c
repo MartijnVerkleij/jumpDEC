@@ -1,7 +1,7 @@
 #include <SDL/SDL.h>
 #include <stdio.h>
 #include "game.h"
-#include "graphics.h"
+//#include "graphics.h"
 
 SDL_Surface *IMG_Load(char[]);
 
@@ -11,23 +11,35 @@ SDL_Surface *LoadImg(char *name);
 
 SDL_Surface *playerImg;
 
-//struct game agame;
+
+//Constant objects
+SDL_Rect room_floor;
+SDL_Surface *blockImg;
+
+int SCREEN_HEIGHT;
+int SCREEN_WIDTH;
+
+void *renderInit(struct game *game) {
+	room_floor.x = 0;
+	room_floor.y = SCREEN_HEIGHT - 20;
+	room_floor.w = SCREEN_WIDTH;
+	room_floor.h = 20;
+
+	playerImg = LoadImg("man.png");
+	blockImg = LoadImg("test.png");
+}
+
 
 void *render(struct game *game){
-	//game = &ingame;
-	//printf("%p",game);
 	int i = game->blockCount;
-	printf("Blockcount: %d",i);
 	
 	SDL_FillRect(screen, NULL, 0);
 	
-	SDL_Surface *blockImg = LoadImg("test.png");
 	for ( i ; i > 0 ; i--) {
 		int block_x = game->blocks[i].x;
 		int block_y = game->blocks[i].y;
 		drawImage(blockImg, block_x, block_y); 
 	}
-	playerImg = LoadImg("man.png");
 	int player_x = game->player.x;
         int player_y = game->player.y;
 	drawImage(playerImg, player_x, player_y);
