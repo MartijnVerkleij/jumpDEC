@@ -1,6 +1,7 @@
 #include <SDL/SDL.h>
 #include <stdio.h>
 #include "game.h"
+#include "levelLoaded.h"
 
 SDL_Surface *IMG_Load(char[]);
 
@@ -8,14 +9,14 @@ void drawImage(SDL_Surface *image, int x, int y);
 
 SDL_Surface *LoadImg(char *name);
 
-SDL_Surface *playerImg;
-
 SDL_Surface IMG_LOAD(char *name);
 
 
 //Constant objects
-SDL_Surface *room_floor;
+SDL_Surface *room_floorimg;
+SDL_Surface *playerImg;
 SDL_Surface *blockImg;
+SDL_Surface *loadingImg;
 
 int SCREEN_HEIGHT;
 int SCREEN_WIDTH;
@@ -31,6 +32,12 @@ void *renderInit(struct game *game) {
 	room_floorimg = LoadImg("floor.png");
 	playerImg = LoadImg("man.png");
 	blockImg = LoadImg("test.png");
+	loadingImg = LoadImg("loading.png");
+
+	while(levelLoaded != 1) {
+		drawImage(loadingImg, 512 - 100 , 256 - 50);
+		SDL_Delay(100);
+	}
 }
 
 
@@ -48,7 +55,7 @@ void *render(struct game *game){
         int player_y = game->player.y;
 	drawImage(playerImg, player_x, player_y);
 	
-	drawImage(room_floorimg, 0, WINDOW_HEIGHT - 20); 
+	drawImage(room_floorimg, 0, WINDOW_HEIGHT - 6); 
 	SDL_Flip(screen);
 }
 

@@ -37,22 +37,21 @@ int main( int argc, char *argv[] ) {
 	
 	while(1){
 		// Start frame
-		Uint32 frame = SDL_GetTicks();
+		long long frame = (long long) SDL_GetTicks();
 		
 		render(&game);
 
-		
-		game.player.x += 10;
-		game.player.y += 10;
-				
+		game.player.x += 1;
+		game.player.y += 1;
+
 		/* ================== */
 		/* FRAME FINALIZATION */
 		/* ================== */
-		Uint32 time_to_spare =(Uint32) 1000/60 - 
-						(SDL_GetTicks() - frame);
-		Uint32 wait = time_to_spare < 0 ? time_to_spare : 0 ; 
+		long long time_to_spare = 1000/30 - (SDL_GetTicks() - frame);
+		//Uint32 wait = 100;
+		Uint32 wait = (time_to_spare > 0) ? (Uint32) time_to_spare : 0 ; 
+		//printf("Time to Spare: %d\n", wait);
 		SDL_Delay(wait); // wait until this loop has taken 1/60 second.
-		printf("Time to Spare: %d\n", time_to_spare);
 	}
 
 }

@@ -1,6 +1,7 @@
 #include <wiringPi.h>
 #include <SDL/SDL.h>
 #include <pthread.h>
+#include "levelLoaded.h"
 
 void handleKeys();
 
@@ -24,12 +25,15 @@ void *keyboardHandler() {
 	pinMode(PIN_W, OUTPUT);
 	pinMode(PIN_P, OUTPUT);
 	
+	//wait for level to be loaded
+	while(levelLoaded != 1){}
+		
 	while(quit != 1 && SDL_WaitEvent(&event)){
 		//puts("event called");
 		switch( event.type ){
 		case SDL_KEYDOWN:
 		case SDL_KEYUP:
-			puts("Handling keypress/release");
+			//puts("Handling keypress/release");
 			handleKeys( &event.key );
 			break;
 		case SDL_QUIT:
