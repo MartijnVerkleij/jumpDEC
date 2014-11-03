@@ -136,13 +136,13 @@ void co_rec(){
 	COORDINATEN AAN
 	************************/
 	/* Lees data uit en sla de coordinate bits op */
-	char x_temp[1] = {(char)(digitalRead(DATA_1) + '0')};
+	char x_temp[1] = {(char)(digitalRead(DATA_5) + '0')};
 	memcpy(&temp_x[co_count], x_temp, 1);
-	char x_temp2[1] = {(char)(digitalRead(DATA_2) + '0')};
+	char x_temp2[1] = {(char)(digitalRead(DATA_6) + '0')};
 	memcpy(&temp_x[co_count + 1], x_temp2, 1);
-	char y_temp[1] = {(char)(digitalRead(DATA_3) + '0')};
+	char y_temp[1] = {(char)(digitalRead(DATA_7) + '0')};
 	memcpy(&temp_y[co_count], y_temp, 1);
-	char y_temp2[1] = {(char)(digitalRead(DATA_4) + '0')};
+	char y_temp2[1] = {(char)(digitalRead(DATA_8) + '0')};
 	memcpy(&temp_y[co_count + 1], y_temp2, 1);
 	co_count += 2;
 	/* Als Coordinaat compleet en het is een block*/
@@ -169,29 +169,6 @@ void co_rec(){
 	if(initSend != 1 && block_build >= blockCount){
                 digitalWrite(INIT_RDY, 1);
 		initSend ==1;
-	}
-
-	/* Als alle blokken gebouwd */
-	if(co_count == 10 && block_build >= blockCount){
-		
-		/*******************
-		Coordinaten zijn klaar
-		lees uit, leeg buffer	
-		en sla op als x en y
-		*********************/
-		
-		/* set player coordinates */
-   		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
-		player.x = fromBinary(temp_x,n);
-		player.y = fromBinary(temp_y,n);
-		puts("player build");
-		printf("%d, %d\n", player.x, player.y);
-		memset(&temp_x[0], 0, sizeof(temp_x));
-		memset(&temp_y[0], 0, sizeof(temp_y));		
-		//temp_x = char[10];
-		//temp_y = char[10];
-		co_count = 0;
-		/* Laat FPGA weten dat init rdy is */
 		pi_init = 1;
 	}
 	
