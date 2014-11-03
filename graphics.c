@@ -18,6 +18,9 @@ void *renderInit(struct game *game){
 	//printf("%p",game);
 	int i = game->blockCount;
 	printf("Blockcount: %d",i);
+	
+	SDL_FillRect(screen, NULL, 0);
+	
 	SDL_Surface *blockImg = LoadImg("test.png");
 	for ( i ; i > 0 ; i--) {
 		int block_x = game->blocks[i].x;
@@ -28,7 +31,7 @@ void *renderInit(struct game *game){
 	int player_x = game->player.x;
         int player_y = game->player.y;
 	drawImage(playerImg, player_x, player_y);
-	
+	SDL_Flip(screen);
 }
 
 SDL_Rect dest;

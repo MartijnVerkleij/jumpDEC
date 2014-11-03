@@ -11,7 +11,7 @@ void *init(char *title) {
         }
 
         /* Set a video mode */
-	screen = SDL_SetVideoMode( 1200, 1000, 0, 0 );
+	screen = SDL_SetVideoMode( 1200, 1000, 0, SDL_HWPALETTE|SDL_DOUBLEBUF );
         if( !screen){
             fprintf( stderr, "Could not set video mode: %s\n", SDL_GetError() );
             SDL_Quit();

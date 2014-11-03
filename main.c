@@ -38,8 +38,8 @@ int main( int argc, char *argv[] ) {
 		
 		renderInit(&game);
 
-		//game.player.x += 10;
-		//game.player.y += 10;
+		game.player.x += 10;
+		game.player.y += 10;
 				
 		/* ================== */
 		/* FRAME FINALIZATION */
