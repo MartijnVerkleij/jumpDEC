@@ -58,8 +58,8 @@ void *render(struct game *game){
 
 SDL_Rect dest;
 void drawImage(SDL_Surface *image, int x, int y){
-        dest.x = x;
-        dest.y = WINDOW_HEIGHT - y;
+        dest.x = x + (image->w / 2);
+        dest.y = WINDOW_HEIGHT - (y + (image->h / 2));
         dest.w = image->w;
         dest.h = image->h;
 
