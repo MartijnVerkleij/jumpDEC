@@ -17,20 +17,20 @@ extern void *renderInit();
 
 
 /* Input Pins */
-int DATA_1 = 10; // X1
-int DATA_2 = 11; // X2
-int DATA_3 = 12; // Y1
-int DATA_4 = 14; // Y2
-int DATA_5 = 2; // Block 1 && x1
-int DATA_6 = 3; // Block 2 && x2
-int DATA_7 = 4; // Block 3 && y1
-int DATA_8 = 5; // Block 4 && y2
-int DATA_9 = 6; // Block 5
-int FPGA_RDY = 1;
+int DATA_1 = 8; // X1
+int DATA_2 = 7; // X2
+int DATA_3 = 10; // Y1
+int DATA_4 = 11; // Y2
+int DATA_5 = 27; // Block 1 && x1
+int DATA_6 = 22; // Block 2 && x2
+int DATA_7 = 23; // Block 3 && y1
+int DATA_8 = 24; // Block 4 && y2
+int DATA_9 = 25; // Block 5
+int FPGA_RDY = 18;
 
 /* Output Pins */
-int INIT_RDY = 7;
-int PI_RDY = 0;
+int INIT_RDY = 4;
+int PI_RDY = 17;
 
 /* booleans */
 int pi_init = 0;
@@ -132,8 +132,8 @@ int fromBinary(char *a, int n)
 void initInput(){
 	game.blockCount = 0;
 
-	wiringPiSetup();
-	/* Initialize Input pins */
+	/*wiringPiSetup();
+	Initialize Input pins 
 	pinMode(DATA_1, INPUT);
 	pinMode(DATA_2, INPUT);
 	pinMode(DATA_3, INPUT);
@@ -144,10 +144,10 @@ void initInput(){
 	pinMode(DATA_8, INPUT);
 	pinMode(DATA_9, INPUT);
 	pinMode(FPGA_RDY, INPUT);
-	
+	*/
 	/* Initalize Output pins and set them to 0 */
-	pinMode(INIT_RDY, OUTPUT);
-	pinMode(PI_RDY, OUTPUT);
+	/*pinMode(INIT_RDY, OUTPUT);
+	pinMode(PI_RDY, OUTPUT); */
 	digitalWrite(INIT_RDY, 0);
 	digitalWrite(PI_RDY, 0);
 
@@ -186,8 +186,8 @@ void blocks_rec(){
 	
 	    /* Send the Ack */
 	    digitalWrite(PI_RDY, 1);
-	    //poll(0,0,10);
-	    sleep(1);
+	    poll(0,0,50);
+	    //sleep(1);
 	    digitalWrite(PI_RDY, 0);
 	
 }
@@ -303,7 +303,7 @@ void do_something(){
 
     /* Send the Ack */
     digitalWrite(PI_RDY, 1);
-    //poll(0,0,10);
-    sleep(1);
+    poll(0,0,50);
+    //sleep(1);
     digitalWrite(PI_RDY, 0);
 }

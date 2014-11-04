@@ -25,16 +25,30 @@ void *init(char *title) {
 	
 
 	int i;
-	for (i = 23; i >= 0; i--) {
+	for (i = 27; i >= 0; i--) {
 		char str[20];
 		switch(i) {
 		case 6:
-			break;
+		case 21:
+		case 20:
+		case 19:
+		case 26:	
 		case 16:
 			break;
+		case 17:
+		case 4:
+		case 2:
+		case 3:
+		case 14:
+		case 15:
+			snprintf(str, sizeof(str), "%s%d%s",
+                                "gpio export ", i, " out");
+                        system(str);
+                        puts(str);
+                        break;
 		default:
 			snprintf(str, sizeof(str), "%s%d%s", 
-				"gpio export ", i, " out");
+				"gpio export ", i, " in");
 			system(str);
 			puts(str);
 			break;

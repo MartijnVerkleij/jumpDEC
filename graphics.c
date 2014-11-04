@@ -52,14 +52,14 @@ void *render(struct game *game){
         int player_y = game->player.y;
 	drawImage(playerImg, player_x, player_y);
 	
-	drawImage(room_floorimg, 0, WINDOW_HEIGHT - 6); 
+	drawImage(room_floorimg, 0, 6); 
 	SDL_Flip(screen);
 }
 
 SDL_Rect dest;
 void drawImage(SDL_Surface *image, int x, int y){
         dest.x = x;
-        dest.y = y;
+        dest.y = WINDOW_HEIGHT - y;
         dest.w = image->w;
         dest.h = image->h;
 
