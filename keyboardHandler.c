@@ -31,9 +31,7 @@ void *keyboardHandler() {
 		case SDL_KEYDOWN:
 		case SDL_KEYUP:
 			//puts("Handling keypress/release");
-			if(levelLoaded == 1) {
-				handleKeys( &event.key );
-			}
+			handleKeys( &event.key );
 			break;
 		case SDL_QUIT:
 			puts("Handling Quit Message");
