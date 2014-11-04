@@ -252,6 +252,13 @@ void co_rec(){
 }
 
 void move_player(){
+	if (digitalRead(DATA_5) &&digitalRead(DATA_6) && digitalRead(DATA_7) && 
+		digitalRead(DATA_8) &&digitalRead(DATA_9)) {
+		co_count = 0;
+		puts(overriding invalid block count);
+		memset(&temp_x[0], 0, sizeof(temp_x));
+                memset(&temp_y[0], 0, sizeof(temp_y));
+	}
 
         printf("x1 = %d\n", digitalRead(DATA_1));
         printf("x2 = %d\n", digitalRead(DATA_2));
