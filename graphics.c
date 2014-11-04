@@ -21,7 +21,7 @@ SDL_Surface *loadingImg;
 int SCREEN_HEIGHT;
 int SCREEN_WIDTH;
 
-void *renderInit(struct game *game) {
+void *renderInit() {
 	
 	/* Create floor 
 	room_floor = SDL_CreateRGBSurface(0, SCREEN_WIDTH, 20, 32, 0, 0, 0, 0);
@@ -34,13 +34,9 @@ void *renderInit(struct game *game) {
 	blockImg = LoadImg("test.png");
 	loadingImg = LoadImg("loading.png");
 
-	while(levelLoaded != 1) {
-		drawImage(loadingImg, 512 - 100 , 256 - 50);
-		SDL_Flip(screen);
-		SDL_Delay(100);
-	}
+	drawImage(loadingImg, 512 - 100 , 256 - 50);
+	SDL_Flip(screen);
 }
-
 
 void *render(struct game *game){
 	int i = game->blockCount;

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 
+
 /* Input Pins */
 int DATA_1 = 10; // X1
 int DATA_2 = 11; // X2
@@ -24,7 +25,6 @@ int pi_init = 0;
 int amount_rec = 0;
 int initSend = 0;
 
-int blockCount = 0;
 
 /* Counters */
 int block_build = 0;
@@ -34,14 +34,20 @@ int co_count = 0;
 char temp_x[10];
 char temp_y[10];
 
-struct coordinate {
-	int x;
-	int y;
-};
+void initInput();
+void do_something();   
 
-struct coordinate blocks[32];
-struct coordinate player; 
+struct game game;
 
+void *inputHandler(){
+        if(amount_rec == 0 && digitalRead(FPGA_RDY) == 1){
+                blocks_rec();
+        }
+        wiringPiISR(FPGA_RDY, INT_EDGE_RISING, do_something);
+        while(1){
+                sched_yield();
+        }
+}
 
 
 /* Used to calculate the decimal */
@@ -72,8 +78,8 @@ int fromBinary(char *a, int n)
 }
 
 /* Initialize the pins and empty the system */
-void init(){
-	blockCount = 0;
+void initInput(){
+	game.blockCount = 0;
 
 	wiringPiSetup();
 	/* Initialize Input pins */
@@ -95,12 +101,12 @@ void init(){
 	digitalWrite(PI_RDY, 0);
 
 	/* Empty the coordinate arrays */
-	player.x = 0;
-	player.y = 0;
+	game.player.x = 0;
+	game.player.y = 0;
 	int i = 0;
-	for(i; i < blockCount; i++){
-		blocks[i].x = 0;
-		blocks[i].y = 0;
+	for(i; i < game.blockCount; i++){
+		game.blocks[i].x = 0;
+		game.blocks[i].y = 0;
 	} 
 	
 }
@@ -122,11 +128,11 @@ void blocks_rec(){
 
 	/* Decimale weergave van binaire getal */
 	int all_len = (int) (sizeof(all)/sizeof(*all)); 
-	blockCount = fromBinary(all, all_len);
+	game.blockCount = fromBinary(all, all_len);
 
 	/* Note that the amount of blocks is received */
 	amount_rec = 1;
-
+	
 	    /* Send the Ack */
 	    digitalWrite(PI_RDY, 1);
 	    //poll(0,0,10);
@@ -172,11 +178,11 @@ void co_rec(){
 		SLA OP ALS X EN Y
 		*******************/
    		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
-		blocks[block_build].x = fromBinary(temp_x,n);
-		blocks[block_build].y = fromBinary(temp_y,n);
+		game.blocks[block_build].x = fromBinary(temp_x,n);
+		game.blocks[block_build].y = fromBinary(temp_y,n);
 		puts("Block build");
-		printf("%d , %d\n",blocks[block_build].x,
-                        blocks  [block_build].y);
+		printf("%d , %d\n",game.blocks[block_build].x,
+                        game.blocks[block_build].y);
 		memset(&temp_x[0], 0, sizeof(temp_x));
 		memset(&temp_y[0], 0, sizeof(temp_y));		
 		//temp_x = char[10];
@@ -184,7 +190,7 @@ void co_rec(){
 		co_count = 0;
 		block_build = block_build + /* AANTAL BLOKKEN */ 1;
 	} 
-	if(initSend != 1 && block_build >= blockCount){
+	if(initSend != 1 && block_build >= game.blockCount){
                 digitalWrite(INIT_RDY, 1);
 		initSend ==1;
 		pi_init = 1;
@@ -223,10 +229,10 @@ void move_player(){
 		
 		/* set player coordinates */
    		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
-		player.x = fromBinary(temp_x,n);
-		player.y = fromBinary(temp_y,n);
+		game.player.x = fromBinary(temp_x,n);
+		game.player.y = fromBinary(temp_y,n);
 		puts("MOVE player");
-		printf("%d, %d\n",player.x, player.y);
+		printf("%d, %d\n", game.player.x, game.player.y);
 		memset(&temp_x[0], 0, sizeof(temp_x));
 		memset(&temp_y[0], 0, sizeof(temp_y));		
 
@@ -243,25 +249,10 @@ void do_something(){
 	move_player();
     }
 
+
     /* Send the Ack */
     digitalWrite(PI_RDY, 1);
     //poll(0,0,10);
     sleep(1);
     digitalWrite(PI_RDY, 0);
-
 }
-
-void main(){
-	init();
-	//while(1){
-	if(amount_rec == 0 && digitalRead(FPGA_RDY) == 1){
-		blocks_rec();	
-	//} else if(digitalRead(FPGA_RDY) ==1){
-	//	do_something();
-	}
-	wiringPiISR(FPGA_RDY, INT_EDGE_RISING, &do_something);
-	while(1){
-		sched_yield();
-	}
-}
-
