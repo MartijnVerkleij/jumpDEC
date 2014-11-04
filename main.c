@@ -8,7 +8,7 @@
 
 extern void *init(char *);
 extern void *keyboardHandler();
-extern void *inputHandler();
+extern void *inputHandler(struct game *);
 extern void *render(struct game *);
 extern void *renderInit(struct game *);
 

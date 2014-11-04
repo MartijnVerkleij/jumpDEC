@@ -1,3 +1,3 @@
-void *inputHandler() {
+void *inputHandler(struct game *game) {
 	
 }

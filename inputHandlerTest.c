@@ -230,7 +230,7 @@ void do_something(){
 
 }
 
-void inputHandler(Game in_game){
+void *inputHandler(Game in_game){
 	game = in_game;
 	init();
 	wiringPiISR(FPGA_RDY, INT_EDGE_RISING, &do_something);
