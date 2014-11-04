@@ -126,6 +126,13 @@ void blocks_rec(){
 
 	/* Note that the amount of blocks is received */
 	amount_rec = 1;
+
+	    /* Send the Ack */
+	    digitalWrite(PI_RDY, 1);
+	    //poll(0,0,10);
+	    sleep(1);
+	    digitalWrite(PI_RDY, 0);
+	
 }
 
 void co_rec(){
@@ -135,6 +142,15 @@ void co_rec(){
 	PLAK BIJ DE REST VAN
 	COORDINATEN AAN
 	************************/
+	
+	printf("x1 = %d\n", digitalRead(DATA_5)); 
+        printf("x2 = %d\n", digitalRead(DATA_6));
+        printf("y1 = %d\n", digitalRead(DATA_7));
+        printf("y2 = %d\n", digitalRead(DATA_8));
+
+
+
+
 	/* Lees data uit en sla de coordinate bits op */
 	char x_temp[1] = {(char)(digitalRead(DATA_5) + '0')};
 	memcpy(&temp_x[co_count], x_temp, 1);
@@ -145,6 +161,8 @@ void co_rec(){
 	char y_temp2[1] = {(char)(digitalRead(DATA_8) + '0')};
 	memcpy(&temp_y[co_count + 1], y_temp2, 1);
 	co_count += 2;
+	//printf(temp_x);
+	//printf(temp_y);
 	/* Als Coordinaat compleet en het is een block*/
 	if(co_count == 10 && block_build < blockCount){
 
@@ -178,6 +196,13 @@ void co_rec(){
 
 void move_player(){
 
+        printf("x1 = %d\n", digitalRead(DATA_1));
+        printf("x2 = %d\n", digitalRead(DATA_2));
+        printf("y1 = %d\n", digitalRead(DATA_3));
+        printf("y2 = %d\n", digitalRead(DATA_4));
+
+
+
 	/* Lees data uit en sla de coordinate bits op */
 	char x_temp[1] = {(char)(digitalRead(DATA_1) + '0')};
 	memcpy(&temp_x[co_count], x_temp, 1);
@@ -208,13 +233,9 @@ void move_player(){
 		co_count = 0;
 	}
 }
-
 void do_something(){
     printf("In de if");
-    if(amount_rec == 0 && pi_init == 0){
-        puts("INIT");
-	blocks_rec();
-    } else if(pi_init == 0){
+    if(pi_init == 0){
 	puts("BLOCKS");
 	co_rec();
     } else {
@@ -224,13 +245,20 @@ void do_something(){
 
     /* Send the Ack */
     digitalWrite(PI_RDY, 1);
-    poll(0,0,1);
+    //poll(0,0,10);
+    sleep(1);
     digitalWrite(PI_RDY, 0);
 
 }
 
 void main(){
 	init();
+	//while(1){
+	if(amount_rec == 0 && digitalRead(FPGA_RDY) == 1){
+		blocks_rec();	
+	//} else if(digitalRead(FPGA_RDY) ==1){
+	//	do_something();
+	}
 	wiringPiISR(FPGA_RDY, INT_EDGE_RISING, &do_something);
 	while(1){
 		sched_yield();
