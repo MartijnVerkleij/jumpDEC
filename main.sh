@@ -3,5 +3,5 @@ gpio mode 0 out
 
 gpio write 7 0
 gpio write 0 0
-gcc main.c -lwiringpi -lSDL -lSDL_image -lpthread
-./a.out
+gcc main.c -lwiringPi -lSDL -lSDL_image -lpthread
+

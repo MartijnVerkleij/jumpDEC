@@ -58,6 +58,7 @@ void handleKeys( SDL_KeyboardEvent *key ) {
 			digitalWrite(PIN_A,1);
                         //printf("A keydown %d\n",digitalRead(PIN_A));
 		}
+		lookRight = 0;
 	} else if(*SDL_GetKeyName( key->keysym.sym) == 'd') {
 		if( key->type == SDL_KEYUP ){
                         digitalWrite(PIN_D,0);
@@ -67,6 +68,7 @@ void handleKeys( SDL_KeyboardEvent *key ) {
                         digitalWrite(PIN_D,1);
                         //printf("D keydown %d\n",digitalRead(PIN_D));
                 }
+		lookRight = 1;
 	} else if(*SDL_GetKeyName( key->keysym.sym) == 'w') {
 		if( key->type == SDL_KEYUP ){
                         digitalWrite(PIN_W,0);
@@ -83,10 +85,10 @@ void handleKeys( SDL_KeyboardEvent *key ) {
 			/* flip pause between 0 and 1 */
                         if (pause) { 
 				pause = 0; 
-				isPaused = 1
+				isPaused = 0;
 			} else { 
 				pause = 1; 
-				isPaused = 0
+				isPaused = 1;
 			}
 			digitalWrite(PIN_P,pause);
 			//printf("Pause: %d\n",digitalRead(PIN_P));

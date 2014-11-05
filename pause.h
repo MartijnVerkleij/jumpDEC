@@ -1,1 +1,2 @@
 int isPaused;
+int lookRight;

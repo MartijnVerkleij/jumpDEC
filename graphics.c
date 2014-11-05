@@ -15,8 +15,11 @@ SDL_Surface IMG_LOAD(char *name);
 //Constant objects
 SDL_Surface *room_floorimg;
 SDL_Surface *playerImg;
+SDL_Surface *playerLeft;
+SDL_Surface *playerRight;
 SDL_Surface *blockImg;
 SDL_Surface *loadingImg;
+SDL_Surface *pauseImg;
 
 int SCREEN_HEIGHT;
 int SCREEN_WIDTH;
@@ -30,7 +33,8 @@ void *renderInit() {
 
 	/* Load sprites */
 	room_floorimg = LoadImg("floor.png");
-	playerImg = LoadImg("man.png");
+	playerRight = LoadImg("limbo_sprite_8x16(2X).png");
+	playerLeft = LoadImg("lookLeft.png");
 	blockImg = LoadImg("test.png");
 	loadingImg = LoadImg("loading.png");
 	pauseImg = LoadImg("pause.png");
@@ -51,8 +55,11 @@ void *render(struct game *game){
 	}
 	int player_x = game->player.x;
         int player_y = game->player.y;
-	drawImage(playerImg, player_x, player_y);
-	
+	if(lookRight){
+		drawImage(playerRight, player_x, player_y);
+	} else {
+		drawImage(playerLeft, player_x, player_y);
+	}
 	if (isPaused) {
 		drawImage(pauseImg, 512, 256);
 	}
