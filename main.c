@@ -124,7 +124,7 @@ int fromBinary(char *a, int n)
         dec=((int)(a[i] -48)*power(2,j))+dec;
         j++;
     }
-    printf("binary number of decimal is %d\n",dec);
+    //printf("binary number of decimal is %d\n",dec);
     return dec;
 }
 
@@ -186,7 +186,7 @@ void blocks_rec(){
 	
 	    /* Send the Ack */
 	    digitalWrite(PI_RDY, 1);
-	    poll(0,0,50);
+	    poll(0,0,30);
 	    //sleep(1);
 	    digitalWrite(PI_RDY, 0);
 	
@@ -200,36 +200,37 @@ void co_rec(){
 	COORDINATEN AAN
 	************************/
 	
-	printf("x1 = %d\n", digitalRead(DATA_5)); 
-        printf("x2 = %d\n", digitalRead(DATA_6));
-        printf("y1 = %d\n", digitalRead(DATA_7));
-        printf("y2 = %d\n", digitalRead(DATA_8));
+	int x1 = digitalRead(DATA_5); 
+        int x2 = digitalRead(DATA_6);
+        int y1 = digitalRead(DATA_7);
+        int y2 = digitalRead(DATA_8);
 
 
 
 
 	if (digitalRead(DATA_1) &&digitalRead(DATA_2) && digitalRead(DATA_3) &&
                 digitalRead(DATA_4)) {
-                co_count = 0;
-                puts("overriding invalid block count");
+                if(co_count == 0) {puts(" Omdat martijn");}
+		co_count = 0;
+                //puts("overriding invalid block count");
                 memset(&temp_x[0], 0, sizeof(temp_x));
                 memset(&temp_y[0], 0, sizeof(temp_y));
         }
 
 	/* lees data uit en sla de coordinate bits op */
-	char x_temp[1] = {(char)(digitalRead(DATA_5) + '0')};
+	char x_temp[1] = {(char)x1 + '0'};
 	memcpy(&temp_x[co_count], x_temp, 1);
-	char x_temp2[1] = {(char)(digitalRead(DATA_6) + '0')};
+	char x_temp2[1] = {(char)x2 + '0'};
 	memcpy(&temp_x[co_count + 1], x_temp2, 1);
-	char y_temp[1] = {(char)(digitalRead(DATA_7) + '0')};
+	char y_temp[1] = {(char)y1 + '0'};
 	memcpy(&temp_y[co_count], y_temp, 1);
-	char y_temp2[1] = {(char)(digitalRead(DATA_8) + '0')};
+	char y_temp2[1] = {(char)y2 + '0'};
 	memcpy(&temp_y[co_count + 1], y_temp2, 1);
 	co_count += 2;
 	//printf(temp_x);
 	//printf(temp_y);
 	/* Als Coordinaat compleet en het is een block*/
-	if(co_count == 10 && block_build < game.blockCount){
+	if(co_count == 10 /*&& block_build < game.blockCount*/){
 
 		/********************
 		COORDINATEN ZIJN KLAAR
@@ -239,9 +240,9 @@ void co_rec(){
    		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
 		game.blocks[block_build].x = fromBinary(temp_x,n);
 		game.blocks[block_build].y = fromBinary(temp_y,n);
-		puts("Block build");
-		printf("%d , %d\n",game.blocks[block_build].x,
-                        game.blocks[block_build].y);
+		//puts("Block build");
+		//printf("%d , %d\n",game.blocks[block_build].x,
+                       // game.blocks[block_build].y);
 		memset(&temp_x[0], 0, sizeof(temp_x));
 		memset(&temp_y[0], 0, sizeof(temp_y));		
 		//temp_x = char[10];
@@ -260,29 +261,31 @@ void co_rec(){
 }
 
 void move_player(){
-	if (digitalRead(DATA_5) &&digitalRead(DATA_6) && digitalRead(DATA_7) && 
-		digitalRead(DATA_8) &&digitalRead(DATA_9)) {
+	
+	int x1 = digitalRead(DATA_1);
+        int x2 = digitalRead(DATA_2);
+        int y1 = digitalRead(DATA_3);
+        int y2 = digitalRead(DATA_4);
+
+	if (digitalRead(DATA_5) && digitalRead(DATA_6) && digitalRead(DATA_7) && 
+		digitalRead(DATA_8) && digitalRead(DATA_9)) {
+		
+		if(co_count != 0){ printf(" overriding invalid block count %d\n", co_count );}
 		co_count = 0;
-		puts("overriding invalid block count");
+		
+		//puts("overriding invalid block count");
 		memset(&temp_x[0], 0, sizeof(temp_x));
                 memset(&temp_y[0], 0, sizeof(temp_y));
 	}
 
-        printf("x1 = %d\n", digitalRead(DATA_1));
-        printf("x2 = %d\n", digitalRead(DATA_2));
-        printf("y1 = %d\n", digitalRead(DATA_3));
-        printf("y2 = %d\n", digitalRead(DATA_4));
-
-
-
 	/* Lees data uit en sla de coordinate bits op */
-	char x_temp[1] = {(char)(digitalRead(DATA_1) + '0')};
+	char x_temp[1] = {(char)x1 + '0'};
 	memcpy(&temp_x[co_count], x_temp, 1);
-	char x_temp2[1] = {(char)(digitalRead(DATA_2) + '0')};
+	char x_temp2[1] = {(char)x2 + '0'};
 	memcpy(&temp_x[co_count + 1], x_temp2, 1);
-	char y_temp[1] = {(char)(digitalRead(DATA_3) + '0')};
+	char y_temp[1] = {(char)y1 + '0'};
 	memcpy(&temp_y[co_count], y_temp, 1);
-	char y_temp2[1] = {(char)(digitalRead(DATA_4) + '0')};
+	char y_temp2[1] = {(char)y2 + '0'};
 	memcpy(&temp_y[co_count + 1], y_temp2, 1);
 	co_count += 2;
 	if(co_count == 10){
@@ -297,8 +300,8 @@ void move_player(){
    		int n =(int) (sizeof(temp_x)/sizeof(*temp_x)); 
 		game.player.x = fromBinary(temp_x,n);
 		game.player.y = fromBinary(temp_y,n);
-		puts("MOVE player");
-		printf("%d, %d\n", game.player.x, game.player.y);
+		//puts("MOVE player");
+		//printf("%d, %d\n", game.player.x, game.player.y);
 		memset(&temp_x[0], 0, sizeof(temp_x));
 		memset(&temp_y[0], 0, sizeof(temp_y));		
 
@@ -306,19 +309,19 @@ void move_player(){
 	}
 }
 void do_something(){
-    printf("In de if");
+    //printf("In de if");
     if(pi_init == 0){
-	puts("BLOCKS");
+	//printf("BLOCKS ");
 	co_rec();
     } else {
-	puts("player");
+	//printf("player ");
 	move_player();
     }
 
 
     /* Send the Ack */
     digitalWrite(PI_RDY, 1);
-    poll(0,0,50);
+    poll(0,0,30);
     //sleep(1);
     digitalWrite(PI_RDY, 0);
 }

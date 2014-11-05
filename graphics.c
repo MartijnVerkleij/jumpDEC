@@ -43,7 +43,7 @@ void *render(struct game *game){
 	
 	SDL_FillRect(screen, NULL, 0);
 	
-	for ( i ; i > 0 ; i--) {
+	for ( i= i-1 ; i >= 0 ; i--) {
 		int block_x = game->blocks[i].x;
 		int block_y = game->blocks[i].y;
 		drawImage(blockImg, block_x, block_y); 
