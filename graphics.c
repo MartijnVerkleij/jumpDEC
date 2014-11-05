@@ -1,7 +1,7 @@
 #include <SDL/SDL.h>
 #include <stdio.h>
 #include "game.h"
-#include "levelLoaded.h"
+#include "pause.h"
 
 SDL_Surface *IMG_Load(char[]);
 
@@ -33,6 +33,7 @@ void *renderInit() {
 	playerImg = LoadImg("man.png");
 	blockImg = LoadImg("test.png");
 	loadingImg = LoadImg("loading.png");
+	pauseImg = LoadImg("pause.png");
 
 	drawImage(loadingImg, 512, 256);
 	SDL_Flip(screen);
@@ -52,9 +53,15 @@ void *render(struct game *game){
         int player_y = game->player.y;
 	drawImage(playerImg, player_x, player_y);
 	
+	if (isPaused) {
+		drawImage(pauseImg, 512, 256);
+	}
+
 	drawImage(room_floorimg, 512, 3); 
 	SDL_Flip(screen);
 }
+
+
 
 SDL_Rect dest;
 void drawImage(SDL_Surface *image, int x, int y){

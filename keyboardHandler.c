@@ -1,7 +1,7 @@
 #include <wiringPi.h>
 #include <SDL/SDL.h>
 #include <pthread.h>
-#include "levelLoaded.h"
+#include "pause.h"
 
 void handleKeys();
 
@@ -81,7 +81,13 @@ void handleKeys( SDL_KeyboardEvent *key ) {
 
 		if( key->type == SDL_KEYUP ){
 			/* flip pause between 0 and 1 */
-                        if (pause) { pause = 0; } else { pause = 1; }
+                        if (pause) { 
+				pause = 0; 
+				isPaused = 1
+			} else { 
+				pause = 1; 
+				isPaused = 0
+			}
 			digitalWrite(PIN_P,pause);
 			//printf("Pause: %d\n",digitalRead(PIN_P));
 			
