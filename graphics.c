@@ -30,7 +30,7 @@ void *renderInit() {
 
 	/* Load sprites */
 	room_floorimg = LoadImg("floor.png");
-	playerImg = LoadImg("man.png");
+	playerImg = LoadImg("limbo_sprite_8x16(2X).png");
 	blockImg = LoadImg("test.png");
 	loadingImg = LoadImg("loading.png");
 

@@ -186,7 +186,7 @@ void blocks_rec(){
 	
 	    /* Send the Ack */
 	    digitalWrite(PI_RDY, 1);
-	    poll(0,0,30);
+	    poll(0,0,8);
 	    //sleep(1);
 	    digitalWrite(PI_RDY, 0);
 	
@@ -321,7 +321,7 @@ void do_something(){
 
     /* Send the Ack */
     digitalWrite(PI_RDY, 1);
-    poll(0,0,30);
+    poll(0,0,8);
     //sleep(1);
     digitalWrite(PI_RDY, 0);
 }
