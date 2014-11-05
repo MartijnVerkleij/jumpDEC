@@ -58,7 +58,7 @@ struct game game;
 
 int main( int argc, char *argv[] ) {
 	
-	init("The Endgame");
+	init("The Jumper");
 	pthread_create(&keyboardThread, NULL, &keyboardHandler, &game);
 
 	/*
